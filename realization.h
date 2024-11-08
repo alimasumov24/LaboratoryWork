@@ -9,7 +9,8 @@ public:
     BMP(const std::string &filename);
     ~BMP() = default;
     void Save(const std::string &filename); 
-    
+    void Rotate90();
+    void RotateCounter90();
 private:
     BMPHeader header;
     BMPInfoHeader infoHeader;

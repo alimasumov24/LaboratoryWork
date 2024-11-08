@@ -42,7 +42,7 @@ BMP::BMP(const std::string &filename) {
 void BMP::Save(const std::string &filename) {
     std::ofstream file(filename, std::ios::binary);
     if (!file) {
-        throw std::runtime_error("Error saving file.");
+        throw std::runtime_error("Error saving file."); 
     }
 
     file.write(reinterpret_cast<const char *>(&header), sizeof(header));
@@ -54,4 +54,30 @@ void BMP::Save(const std::string &filename) {
         }
     }
     file.close();
+}
+
+void BMP::Rotate90() {
+    std::vector<std::vector<Pixel>> rotatedData(infoHeader.width, std::vector<Pixel>(infoHeader.height));
+
+    for (int i = 0; i < infoHeader.height; ++i) {
+        for (int j = 0; j < infoHeader.width; ++j) {
+            rotatedData[j][infoHeader.height - i - 1] = data[i][j];
+        }
+    }
+
+    data = rotatedData;
+    std::swap(infoHeader.width, infoHeader.height);
+}
+
+void BMP::RotateCounter90() {
+    std::vector<std::vector<Pixel>> rotatedData(infoHeader.width, std::vector<Pixel>(infoHeader.height));
+
+    for (int i = 0; i < infoHeader.height; ++i) {
+        for (int j = 0; j < infoHeader.width; ++j) {
+            rotatedData[infoHeader.width - j - 1][i] = data[i][j];
+        }
+    }
+
+    data = rotatedData;
+    std::swap(infoHeader.width, infoHeader.height);
 }
