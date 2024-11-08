@@ -34,25 +34,5 @@ struct Pixel {
     uint8_t red;
 };
 
-class BMPImage {
-public:
-    BMPHeader header;
-    BMPInfoHeader infoHeader;
-    std::vector<Pixel> pixels;
-
-    BMPImage(int32_t width, int32_t height) {
-        infoHeader.width = width;
-        infoHeader.height = height;
-        pixels.resize(width * height);
-    }
-
-    Pixel& getPixel(int32_t x, int32_t y) {
-        return pixels[y * infoHeader.width + x];
-    }
-
-    const Pixel& getPixel(int32_t x, int32_t y) const {
-        return pixels[y * infoHeader.width + x];
-    }
-};
 
 #endif // BMP_H

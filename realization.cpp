@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "bmp.h"
-#include "save.h"
+#include "realization.h"
 
 
 BMP::BMP(const std::string &filename) {
@@ -36,5 +36,22 @@ BMP::BMP(const std::string &filename) {
         }
     }
 
+    file.close();
+}
+
+void BMP::Save(const std::string &filename) {
+    std::ofstream file(filename, std::ios::binary);
+    if (!file) {
+        throw std::runtime_error("Error saving file.");
+    }
+
+    file.write(reinterpret_cast<const char *>(&header), sizeof(header));
+    file.write(reinterpret_cast<const char *>(&infoHeader), sizeof(infoHeader));
+
+    for (int i = 0; i < infoHeader.height; ++i) {
+        for (int j = 0; j < infoHeader.width; ++j) {
+            file.write(reinterpret_cast<const char *>(&data[i][j]), sizeof(Pixel));
+        }
+    }
     file.close();
 }
