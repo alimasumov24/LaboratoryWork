@@ -11,6 +11,7 @@ public:
     void Save(const std::string &filename); 
     void Rotate90();
     void RotateCounter90();
+    void GaussianFilter();
 private:
     BMPHeader header;
     BMPInfoHeader infoHeader;

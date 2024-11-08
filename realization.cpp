@@ -81,3 +81,38 @@ void BMP::RotateCounter90() {
     data = rotatedData;
     std::swap(infoHeader.width, infoHeader.height);
 }
+
+void BMP::GaussianFilter() {
+    float kernel[3][3] = {
+        {1 / 16.0f, 2 / 16.0f, 1 / 16.0f},
+        {2 / 16.0f, 4 / 16.0f, 2 / 16.0f},
+        {1 / 16.0f, 2 / 16.0f, 1 / 16.0f}
+    };
+
+    std::vector<std::vector<Pixel>> tempData(infoHeader.height, std::vector<Pixel>(infoHeader.width));
+
+    for (int y = 0; y < infoHeader.height; ++y) {
+        for (int x = 0; x < infoHeader.width; ++x) {
+            float sumRed = 0, sumGreen = 0, sumBlue = 0;
+
+            for (int ky = -1; ky <= 1; ++ky) {
+                for (int kx = -1; kx <= 1; ++kx) {
+                    int ny = y + ky;
+                    int nx = x + kx;
+
+                    if (ny >= 0 && ny < infoHeader.height && nx >= 0 && nx < infoHeader.width) {
+                        sumRed += data[ny][nx].red * kernel[ky + 1][kx + 1];
+                        sumGreen += data[ny][nx].green * kernel[ky + 1][kx + 1];
+                        sumBlue += data[ny][nx].blue * kernel[ky + 1][kx + 1];
+                    }
+                }
+            }
+
+            tempData[y][x].red = static_cast<uint8_t>(sumRed);
+            tempData[y][x].green = static_cast<uint8_t>(sumGreen);
+            tempData[y][x].blue = static_cast<uint8_t>(sumBlue);
+        }
+    }
+
+    data = tempData;
+}
